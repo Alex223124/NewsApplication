@@ -1,8 +1,7 @@
 class LinksController < ApplicationController
   before_action :set_link, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :authorized_user, only: [:edit, :update, :destroy]
-  before_filter :authenticate_user!, except: [:index, :show]
-  
 
   # GET /links
   # GET /links.json
@@ -27,8 +26,7 @@ class LinksController < ApplicationController
   # POST /links
   # POST /links.json
   def create
-   @link = current_user.links.build(link_params)
-    
+    @link = current_user.links.build(link_params)
 
     respond_to do |format|
       if @link.save
@@ -64,7 +62,7 @@ class LinksController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
+
   def upvote
     @link = Link.find(params[:id])
     @link.upvote_by current_user
@@ -77,8 +75,7 @@ class LinksController < ApplicationController
     redirect_to :back
   end
 
-    private
-   
+  private
     # Use callbacks to share common setup or constraints between actions.
     def set_link
       @link = Link.find(params[:id])
